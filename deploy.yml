@@ -1,0 +1,48 @@
+name: Deploy Medusa Backend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{AKIA4W4Q2S4YG6EDB7G2}}
+        aws-secret-access-key: ${{ 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 }}
+        aws-region: us-east-1
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: v1.9.5
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      run: terraform plan
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+
+    - name: Build Docker Image
+      run: docker build -t medusa-backend .
+
+    - name: Push Docker Image to ECR
+      run: |
+        $(aws ecr get-login-password --region ap-south-1a | docker login --username AWS --password-stdin <your-account-id>.dkr.ecr.ap-south-1a.amazonaws.com)
+        docker tag medusa-backend:latest <your-account-id>.dkr.ecr.us-east-1.amazonaws.com/medusa-backend:latest
+        docker push <your-account-id>.dkr.ecr.us-east-1.amazonaws.com/medusa-backend:latest
+
+    - name: Update ECS Service
+      run: aws ecs update-service --cluster medusa-cluster --service medusa-service --force-new-deployment
+
