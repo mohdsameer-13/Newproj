@@ -103,7 +103,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
 }
 
 resource "aws_instance" "web_server" {
-  ami = "ami-0e86e20dae9224db8"
+  ami = ""
   instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.medusa_sg.id]
   subnet_id = aws_subnet.medusa_subnet.id
