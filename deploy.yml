@@ -16,8 +16,8 @@ jobs:
     - name: Set up AWS CLI
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{AKIA4W4Q2S4YG6EDB7G2}}
-        aws-secret-access-key: ${{ 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 }}
+        aws-access-key-id: ${{}}
+        aws-secret-access-key: ${{}}
         aws-region: us-east-1
 
     - name: Set up Terraform
